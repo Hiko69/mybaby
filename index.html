@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Валентинка</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body {
+    margin:0;
+    padding:20px;
+    font-family:'Roboto', Arial, sans-serif;
+    background-color:#ffe6f0;
+    overflow-x:hidden;
+    transition: background-color 1s ease;
+}
+
+/* Заголовок */
+h1 {
+    text-align:center;
+    color:#c71585;
+    font-family:'Pacifico', cursive;
+    font-size:48px;
+    font-weight:600;
+    margin-bottom:20px;
+}
+
+/* Текстовые блоки */
+.text-block {
+    padding:15px 20px;
+    margin-bottom:12px;
+    font-size:20px;
+    font-weight:500;
+    line-height:1.6;
+    background-color: rgba(255,255,255,0.8);
+    border-radius:12px;
+    max-width:800px;
+    opacity:0;
+    transform:translateY(20px);
+    transition: all 1.2s ease;
+}
+.text-block.visible {
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* Селектор */
+select {
+    display:block;
+    width:220px;
+    max-width:100%;
+    padding:5px 10px;
+    margin:20px auto;
+    font-size:16px;
+    opacity:0;
+    transform:translateY(10px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+select.visible {
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* Фото блоки */
+#photos, #after-video {
+    display:none;
+    text-align:center;
+    padding:30px;
+    border-radius:15px;
+    background-color:#ffe6f0;
+    opacity:0;
+    transition: opacity 1.2s ease;
+}
+#photos.visible, #after-video.visible {
+    display:block;
+    opacity:1;
+}
+.photo-container {
+    display:inline-block;
+    margin:15px;
+    text-align:center;
+}
+.photo-caption {
+    font-size:22px;
+    font-weight:700;
+    color:#ff99cc;
+    margin-bottom:10px;
+    opacity:0;
+    transform:translateY(-10px);
+    transition:opacity 1.2s ease, transform 1.2s ease;
+}
+.photo-caption.visible {
+    opacity:1;
+    transform:translateY(0);
+}
+#photos img, #after-video img {
+    width:280px;
+    height:280px;
+    object-fit:cover;
+    border-radius:15px;
+    border:4px solid #ff99cc;
+    opacity:0;
+    transform:translateY(-20px) scale(0.9);
+    transition:opacity 1.2s ease, transform 1.2s ease;
+}
+#photos img.visible, #after-video img.visible {
+    opacity:1;
+    transform:translateY(0) scale(1);
+}
+
+/* Видео блок */
+#video-text {
+    display:none;
+    text-align:center;
+    font-size:22px;
+    font-weight:700;
+    color:#ff99cc;
+    margin-top:20px;
+    margin-bottom:10px;
+}
+#show-video-btn {
+    display:none;
+    opacity:0;
+    transform:translateY(20px);
+    margin:0 auto 20px auto;
+    padding:10px 20px;
+    font-size:16px;
+    cursor:pointer;
+    background-color:#c71585;
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    transition:all 0.8s ease;
+}
+#show-video-btn.visible {
+    opacity:1;
+    transform:translateY(0);
+}
+#show-video-btn:hover {background-color:#a01060;}
+
+#video-block {
+    display:none;
+    margin-top:20px;
+    text-align:center;
+    border:6px solid #ff99cc;
+    border-radius:20px;
+    padding:10px;
+    max-width:450px;
+    margin-left:auto;
+    margin-right:auto;
+    opacity:0;
+    transition:opacity 1.2s ease;
+}
+#video-block.visible {
+    display:block;
+    opacity:1;
+}
+
+/* Полноэкранные сообщения */
+#full-screen-msg, #smart-msg {
+    visibility:hidden;
+    opacity:0;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    z-index:10000;
+    font-weight:900;
+    transition:opacity 0.5s ease;
+    flex-direction:column;
+}
+#full-screen-msg {
+    background-color: rgba(0,0,0,0.85);
+    color:#fff;
+    font-size:48px;
+}
+#smart-msg {
+    background-color: rgba(0,0,0,0.85);
+    color:#fff;
+    font-size:72px;
+}
+#full-screen-msg.visible, #smart-msg.visible {
+    visibility:visible;
+    opacity:1;
+}
+
+/* Сообщение "поцелуйтесь" на весь экран с кнопкой */
+#big-kiss {
+    visibility:hidden;
+    opacity:0;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background-color:rgba(255,182,193,0.95);
+    color:#c71585;
+    font-size:72px;
+    font-weight:900;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    z-index:9998;
+    transition:opacity 1s ease;
+    flex-direction:column;
+}
+#big-kiss.visible {
+    visibility:visible;
+    opacity:1;
+}
+#big-kiss button {
+    margin-top:30px;
+    padding:15px 30px;
+    font-size:28px;
+}
+
+/* Сердечки */
+#heart-container {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:1;
+}
+.heart {
+    position:absolute;
+    top:-50px;
+    font-size:20px;
+    color:#ff66aa;
+    pointer-events:none;
+    user-select:none;
+    animation:floatDown linear forwards, pulse 1s infinite alternate;
+}
+@keyframes floatDown {
+    0%{transform:translateY(0) scale(1); opacity:1;}
+    100%{transform:translateY(100vh) scale(1.5); opacity:0;}
+}
+@keyframes pulse {0%{transform:scale(1);}100%{transform:scale(1.3);}}
+
+/* Кнопки */
+button {
+    cursor:pointer;
+    border:none;
+    border-radius:10px;
+    padding:10px 20px;
+    background-color:#c71585;
+    color:#fff;
+    font-size:16px;
+    margin-top:10px;
+    transition:0.3s;
+}
+button:hover {background-color:#a01060;}
+</style>
+</head>
+<body>
+
+<div id="heart-container"></div>
+<h1>Попик ❤️</h1>
+
+<!-- Текстовые блоки -->
+<div class="text-block" data-text="любимый попик, вот и наступил день влюбленных по совместительству ровно 3й месяц нашего замечательного знакомства."></div>
+<div class="text-block" data-text="Я очень рад что мы быстро поладили и смогли понимать друг-друга с первых сообщений, конечно все на этом не ограничелось и слава богу.(тут могла быть шутка типа мне)(извини)"></div>
+<div class="text-block" data-text="За все время проведенное вместе было много хороших и радостных моментов, ты по настоящему помогла мне опять чувствовать себя живым и я очень благодарен тебе за это."></div>
+<div class="text-block" data-text="Мне очень важно знать что ты чувствуешь повседневно, давай знать если что-то не так и мы попробуем что-то предпринять да если это какая-то личная проблема я всегда буду рад помочь своему попику..."></div>
+<div class="text-block" data-text="Ты для меня стала моим ребенком я вижу себя 1-2 года назад в тебе (вижу себя в тебе типа поняла) хочу чтобы у тебя было все как можно лучше и хочу этому способствовать. (чувство будто я пишу признание в любви да? так оно и есть)"></div>
+<div class="text-block" data-text="поцелуйтесь"></div>
+<div class="text-block" data-text="Я весь день ломал голову и думал как сделать валентинку и решил что тебе может понравится подборка наших лучших фото и видео (ващета все лучшие но эти типа самые самые)"></div>
+<div class="text-block" data-text="Так што садись поудобнее и наслаждайся зая, люблю тебя очень"></div>
+<div class="text-block" data-text="ты хочешь посмотреть на нас?"></div>
+
+<select id="wish-select">
+    <option value="" selected disabled>Выберите вариант</option>
+    <option value="хочу">хочу</option>
+    <option value="нуне">нуне</option>
+</select>
+
+<!-- Фото блок -->
+<div id="photos">
+    <div class="photo-container">
+        <div class="photo-caption">тут мы гуляли с артемом и он нам купил сигаретки помнишь?</div>
+        <img src="фоточки/эмммм.jpg" alt="Фото 1">
+    </div>
+    <div class="photo-container">
+        <div class="photo-caption">это была первая прогулочка в наших отношениях</div>
+        <img src="фоточки/этоправда.jpg" alt="Фото 2">
+    </div>
+    <div class="photo-container">
+        <div class="photo-caption">тут красивая девочка решила нас сфоткать хотя мы спешили к остановке</div>
+        <img src="фоточки/vibe.jpg" alt="Фото 3">
+    </div>
+</div>
+
+<div id="video-text">тут я сделал небольшое видео с нами</div>
+<button id="show-video-btn">посмотреть видео</button>
+<div id="video-block">
+    <iframe
+        src="https://kinescope.io/embed/aTSkuSsozTBj1zV9wQpvwF"
+        width="350"
+        height="700"
+        frameborder="0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen>
+    </iframe>
+
+    <div style="margin-top:10px;">
+        Оцени видео 1-10:
+        <input type="number" id="video-score" min="1" max="10" style="width:50px;">
+        <button id="score-btn">Оценить</button>
+    </div>
+</div>
+
+<!-- После оценки 10 -->
+<div id="after-video">
+    <div class="photo-container">
+        <div class="photo-caption">красивая девочка (вроде девочка)</div>
+        <img src="фоточки/final1.jpg" alt="финал1">
+    </div>
+    <div class="photo-container">
+        <div class="photo-caption">твоя дочь.</div>
+        <img src="фоточки/final2.jpg" alt="финал2">
+    </div>
+    <div class="photo-container">
+        <div class="photo-caption">прайм фото)</div>
+        <img src="фоточки/final3.jpg" alt="финал3">
+    </div>
+    <button id="end-btn">Конец.?</button>
+</div>
+
+<!-- Субтитры -->
+<div id="subtitles" style="display:none; text-align:center; padding:20px; color:#c71585; font-size:22px;">
+    <p>Сообщений - 94378</p>
+    <p>Попик - 6</p>
+    <p>зая - 1278</p>
+    <p>любимый/любимая - 158</p>
+    <p>ребенок - 253</p>
+    <p>кот - 225</p>
+    <p>киса - 48</p>
+    <p>кисуня - 6</p>
+    <p>люблю - 592</p>
+    <p>сладких снов - 119</p>
+    <p>Дней проведено вместе - 92</p>
+    <p>фото в чате - 1945</p>
+    <p>голосовых/кружков - 788</p>
+    <p>видосиков - 107</p>
+    <button id="final-text-btn">финальный текст</button>
+</div>
+
+<!-- Финальный текст -->
+<div id="final-text" style="display:none; text-align:center; padding:20px; font-size:24px; font-weight:700; color:#c71585; background-color:rgba(255,182,193,0.8); border-radius:15px; margin:20px;">
+Вот ты и посмотрела какие мы с тобой хорошенькие, рад что ты оценила на 10 баллов, за эти 3 месяца многое произошло, было очень весело и круто. А как ты уже знаешь, дальше — лучше. Так што ждем еще дропчики, знакомство с твоей мамой и все такое, люблю тебя ❤️
+<br><button id="final-list-btn">не ну вот это точно конец</button>
+</div>
+
+<!-- Список любви -->
+<div id="final-list" style="display:none; max-width:800px; margin:20px auto; background-color:rgba(255,182,193,0.8); padding:20px; border-radius:15px; font-size:20px; line-height:1.6; color:#c71585;">
+<p>Я люблю тебя за то что:</p>
+<p>ты у меня самая красивая</p>
+<p>ты у меня самая милая</p>
+<p>ты меня кормишь</p>
+<p>ты мне делаешь кофе (почти)</p>
+<p>ты нас фоткаешь</p>
+<p>ты заморачиваешься над каждой мелочью</p>
+<p>ты не конфликтная и мы уже 3 месяца без ссор</p>
+<p>ты всегда согласна погулять</p>
+<p>ты всегда согласна провести время вместе</p>
+<p>ты у меня самая умная и согласна играть в роблокс режим с математикой</p>
+<p>ты понимаешь мои шутки</p>
+<p>ты имеешь хороший юмор</p>
+<p>ты меня не оставляешь в скуке и одиночестве</p>
+<p>ты всегда отвечаешь мне мгновенно (если не спишь)</p>
+<p>ты всегда готова пообщаться даже если занята</p>
+<p>ты пишешь мне первой</p>
+<p>ты делаешь меня счастливым</p>
+<p>ты очень открыта со мной</p>
+<p>ты отвечаешь на мои тупые шутки своими тупыми шутками</p>
+<p>ты у меня тактильная</p>
+<p>ты разделяешь со мной чувства</p>
+<p>ты интересуешься как я там и что делаю</p>
+<p>ты заботишься обо мне</p>
+<p>я очень рад что ты у меня есть, хочу уже провести лето вместе, люблю еще раз, чтобы не расслаблялась ❤️</p>
+</div>
+
+<!-- Поцелуйтесь -->
+<div id="big-kiss">ПОЦЕЛУЙТЕСЬ 😈 <button id="kiss-btn">Поцеловались</button></div>
+<div id="full-screen-msg">Ты думала у тебя есть выбор?)</div>
+<div id="smart-msg">умница)</div>
+
+<script>
+const typingSpeed=15;
+const divs=document.querySelectorAll(".text-block");
+const cursor=document.createElement("span");
+cursor.classList.add("cursor");
+
+/* Печать текста */
+function typeText(div,callback){
+    const text=div.getAttribute("data-text");
+    div.textContent="";
+    div.appendChild(cursor);
+    let i=0;
+    function typeChar(){
+        div.insertBefore(document.createTextNode(text[i]),cursor);
+        i++;
+        if(i<text.length) setTimeout(typeChar,typingSpeed);
+        else{ div.removeChild(cursor); div.classList.add("visible"); if(callback) callback();}
+    }
+    typeChar();
+}
+
+function typeAll(divs,index=0,finalCallback){
+    if(index<divs.length) typeText(divs[index],()=>typeAll(divs,index+1,finalCallback));
+    else if(finalCallback) finalCallback();
+}
+
+/* Сердечки */
+function startHearts(){
+    setInterval(()=>{
+        const heart=document.createElement("div");
+        heart.className="heart";
+        heart.style.left=Math.random()*100+"vw";
+        heart.style.fontSize=15+Math.random()*35+"px";
+        const colors=["#ff99cc","#ff66aa","#ff3399","#ffb3d9"];
+        heart.style.color=colors[Math.floor(Math.random()*colors.length)];
+        heart.style.animationDuration=3+Math.random()*3+"s";
+        document.getElementById("heart-container").appendChild(heart);
+        setTimeout(()=>heart.remove(),6000);
+    },400);
+}
+
+/* Показ фото */
+function showPhotos(){
+    document.getElementById("wish-select").style.display="none";
+    document.querySelector("h1").style.display="none";
+    divs.forEach(d=>d.style.display="none");
+
+    const photosBlock=document.getElementById("photos");
+    photosBlock.classList.add("visible");
+
+    const photos=document.querySelectorAll("#photos img");
+    const captions=document.querySelectorAll(".photo-caption");
+    photos.forEach((img,i)=>{
+        setTimeout(()=>{
+            img.classList.add("visible");
+            captions[i].classList.add("visible");
+            if(i===photos.length-1){
+                document.getElementById("video-text").style.display="block";
+                const btn=document.getElementById("show-video-btn");
+                btn.style.display="block";
+                setTimeout(()=>btn.classList.add("visible"),50);
+                startHearts();
+            }
+        },i*400);
+    });
+}
+
+/* Поцелуйтесь */
+divs.forEach(div=>{
+    if(div.getAttribute("data-text")==="поцелуйтесь"){
+        div.addEventListener("transitionend",()=>{
+            document.getElementById("big-kiss").classList.add("visible");
+        });
+    }
+});
+document.getElementById("kiss-btn").addEventListener("click",()=>{
+    document.getElementById("big-kiss").classList.remove("visible");
+});
+
+/* Инициализация */
+typeAll(divs,0,()=>{document.getElementById("wish-select").classList.add("visible");});
+
+/* Выбор селектора */
+document.getElementById("wish-select").addEventListener("change",function(){
+    const msg=document.getElementById("full-screen-msg");
+    msg.textContent="Ты думала у тебя есть выбор?)";
+    msg.classList.add("visible");
+    setTimeout(()=>{msg.classList.remove("visible"); showPhotos();},3000);
+});
+
+/* Видео */
+document.getElementById("show-video-btn").addEventListener("click",()=>{
+    document.getElementById("video-block").classList.add("visible");
+});
+
+/* Оценка видео */
+document.getElementById("score-btn").addEventListener("click",()=>{
+    const val = Number(document.getElementById("video-score").value);
+    if(val === 10){
+        // Показываем «умница)»
+        const smartMsg = document.getElementById("smart-msg");
+        smartMsg.classList.add("visible");
+        setTimeout(()=>{
+            smartMsg.classList.remove("visible");
+
+            // Далее показываем фото после видео
+            document.getElementById("video-block").classList.remove("visible");
+            const next = document.getElementById("after-video");
+            next.classList.add("visible");
+            const imgs = next.querySelectorAll("img");
+            const captions = next.querySelectorAll(".photo-caption");
+            imgs.forEach((img,i)=>setTimeout(()=>{
+                img.classList.add("visible");
+                captions[i].classList.add("visible");
+            }, i*400));
+        }, 2000); // показываем надпись 2 секунды
+    } else {
+        const msg = document.getElementById("full-screen-msg");
+        msg.textContent = "Попробуй еще";
+        msg.classList.add("visible");
+        const retryBtn = document.createElement("button");
+        retryBtn.textContent = "Хорошо...";
+        retryBtn.style.cssText = "margin-top:20px;";
+        msg.appendChild(retryBtn);
+        retryBtn.addEventListener("click",()=>{
+            msg.classList.remove("visible");
+            msg.textContent = "Ты думала у тебя есть выбор?)";
+        });
+    }
+});
+
+/* Конец и субтитры */
+document.getElementById("end-btn").addEventListener("click",()=>{
+    document.getElementById("after-video").classList.remove("visible");
+    document.getElementById("subtitles").style.display="block";
+});
+
+/* Финальный текст */
+document.getElementById("final-text-btn").addEventListener("click",()=>{
+    document.getElementById("final-text").style.display="block";
+    document.getElementById("final-text-btn").style.display="none";
+});
+
+/* Финальный список */
+document.getElementById("final-list-btn").addEventListener("click",()=>{
+    document.getElementById("final-list").style.display="block";
+    document.getElementById("final-text").style.display="none";
+});
+</script>
+</body>
+</html>
